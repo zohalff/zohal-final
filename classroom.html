@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Classroom — Pocket Classroom</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="pc-bg pc-text">
+
+  <nav class="navbar navbar-expand-lg navbar-dark pc-navbar">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">Pocket Classroom</a>
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link active" href="classroom.html">Classroom</a></li>
+          <li class="nav-item"><a class="nav-link" href="quizzes.html">Quizzes</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container-fluid py-4">
+    <div class="row g-3">
+      <!-- Left: Lessons -->
+      <aside class="col-md-3">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="mb-0">Lessons</h5>
+          <div>
+            <button id="importBtn" class="btn btn-sm btn-outline-light me-1" title="Import JSON">Import</button>
+            <button id="addLessonBtn" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#lessonModal">Add</button>
+          </div>
+        </div>
+        <div id="lessonsList" class="list-group lesson-list"></div>
+      </aside>
+
+      <!-- Center: Content -->
+      <section class="col-md-6">
+        <div class="card pc-card">
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <div>
+                <h4 id="lessonTitle">No lesson selected</h4>
+                <p id="lessonDesc" class="text-muted small">Select a lesson to view content.</p>
+              </div>
+              <div class="text-end">
+                <button id="editLessonBtn" class="btn btn-sm btn-outline-light me-1" title="Edit lesson">Edit</button>
+                <button id="deleteLessonBtn" class="btn btn-sm btn-danger" title="Delete lesson">Delete</button>
+              </div>
+            </div>
+
+            <div id="videoWrapper" class="ratio ratio-16x9 my-3">
+              <iframe id="lessonVideo" src="about:blank" allowfullscreen></iframe>
+            </div>
+
+            <div>
+              <h6>Assignments</h6>
+              <ul id="assignments" class="list-group list-group-flush mb-2"></ul>
+
+              <div class="input-group mb-2">
+                <input id="newAssignInput" class="form-control form-control-sm" placeholder="New assignment title">
+                <button id="addAssignBtn" class="btn btn-sm btn-success">Add</button>
+              </div>
+
+              <div class="d-flex gap-2">
+                <button id="exportBtn" class="btn btn-sm btn-outline-light">Export JSON</button>
+                <a id="downloadLink" class="d-none"></a>
+                <a href="quizzes.html" class="btn btn-sm btn-primary ms-auto">Open Quizzes</a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Right: Chat / Participants -->
+      <aside class="col-md-3">
+        <div class="card pc-card mb-3">
+          <div class="card-body d-flex flex-column" style="height:380px">
+            <h6>Session Chat</h6>
+            <div id="chatBox" class="flex-grow-1 overflow-auto mb-2 chat-box p-2 rounded"></div>
+            <div class="input-group">
+              <input id="chatInput" class="form-control form-control-sm" placeholder="Type a message...">
+              <button id="chatSend" class="btn btn-sm btn-light">Send</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card pc-card">
+          <div class="card-body">
+            <h6>Participants</h6>
+            <ul id="participants" class="list-unstyled mb-0 small text-muted">
+              <li>Teacher</li>
+              <li>Student 1</li>
+              <li>Student 2</li>
+              </ul>
+            <hr>
+            <small class="text-muted">Tip: Data is stored locally in your browser (LocalStorage).</small>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Lesson Modal (Add / Edit) -->
+  <div class="modal fade" id="lessonModal" tabindex="-1">
+    <div class="modal-dialog">
+      <form id="lessonForm" class="modal-content pc-modal">
+        <div class="modal-header">
+          <h5 id="modalTitle" class="modal-title">Add Lesson</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-2">
+            <label class="form-label">Title</label>
+            <input id="lessonTitleInput" required class="form-control" />
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Short description</label>
+            <textarea id="lessonDescInput" class="form-control" rows="2"></textarea>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Video embed URL (YouTube embed URL)</label>
+            <input id="lessonVideoInput" class="form-control" placeholder="https://www.youtube.com/embed/VIDEO_ID" />
+          </div>
+
+          <hr>
+          <h6 class="mb-2">Quiz (optional) — Multiple choice</h6>
+          <div id="quizEditor">
+            <!-- dynamic quiz editor by JS -->
+          </div>
+          <button id="addQBtn" type="button" class="btn btn-sm btn-outline-light mt-2">Add question</button>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Save Lesson</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <input type="file" id="importFile" accept="application/json" class="d-none">
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
